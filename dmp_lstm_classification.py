@@ -93,7 +93,7 @@ if __name__ == '__main__':
     y_test = df_test['index']
     
     y_test_label = y_test
-    
+        
     x_test = np.array(x_test)
     zeros = np.zeros((x_train.shape[0] - x_test.shape[0], x_train.shape[1]))
     x_test = np.append(x_test, zeros, axis = 0)
@@ -103,8 +103,6 @@ if __name__ == '__main__':
     x_test = np.reshape(x_test.values, [1,x_test.shape[0], x_test.shape[1]])
     y_test = np.reshape(np.array(to_categorical(y_test)), [1, y_test.shape[0], LABELNUM])
        
-    print(df_train)
-    print(df_test)
     
     """モデル定義"""
     BATCHSIZE = 20
