@@ -75,6 +75,7 @@ if __name__ == '__main__':
     
     LABELNUM = 2
     
+    
     """データの前処理"""
     df_train =  pd.concat([df_list_asphalt[0],
                            df_list_asphalt[1],
@@ -105,9 +106,9 @@ if __name__ == '__main__':
        
     
     """モデル定義"""
-    BATCHSIZE = 20
-    EPOCHS = 456
-    UNITNUM = 50
+    BATCHSIZE = 8
+    EPOCHS = 300
+    UNITNUM = 20
     optimizer = RMSprop()
     model = Sequential()
     model.add(LSTM(UNITNUM, input_shape = (x_train.shape[1], x_train.shape[2]), return_sequences = True))
