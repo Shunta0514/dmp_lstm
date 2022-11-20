@@ -5,6 +5,7 @@ import seaborn as sns; sns.set()
 import matplotlib.pyplot as plt
 import codecs
 from sklearn.metrics import confusion_matrix
+import glob
 
 from keras.models import Sequential
 from keras.layers import Activation, Dense
@@ -20,10 +21,10 @@ def read_csv(csv_name):
     return df
 
 
-def append_dataframe(df_list, csv_list, csv_dir):
+def append_dataframe(df_list, csv_list):
     try:
         for num in range(len(csv_list)):
-            df = read_csv(csv_dir + csv_list[num])
+            df = read_csv(csv_list[num])
             df = df.head(1200)
             df = df.drop(range(0,60))
             df = df.iloc[:,[5,6,7,9,10,19,20,21,23,24,33,34,35,37,38,47,48,49,51,52,61,62,63,65,66]]
@@ -48,26 +49,18 @@ def plot_history_accuracy(fit):
 
 if __name__ == '__main__':
     
+    #get csv files
     csv_dir = './lstm_imu_raw_data/'
-    csv_list_asphalt = ['asphalt_flat_straight_normal/アスファルト_普通_1.csv',
-                        'asphalt_flat_straight_normal/アスファルト_普通_2.csv',
-                        'asphalt_flat_straight_normal/アスファルト_普通_3.csv',
-                        'asphalt_flat_straight_normal/アスファルト_普通_4.csv',
-                        'asphalt_flat_straight_normal/アスファルト_普通_5.csv']
+    csv_list_asphalt = glob.glob(csv_dir + '/[a][s][p][h]*/*.csv')
+    csv_list_sand = glob.glob(csv_dir + '/[s][a][n][d]*/*.csv')
     
-    csv_list_sand = ['sand_flat_straight_normal/砂利_普通_1.csv', #x軸方向の線形加速度が不適当なデータ
-                     'sand_flat_straight_normal/砂利_普通_2.csv',
-                     'sand_flat_straight_normal/砂利_普通_3.csv',
-                     'sand_flat_straight_normal/砂利_普通_4.csv',
-                     'sand_flat_straight_normal/砂利_普通_5.csv',
-                     'sand_flat_straight_normal/砂利_普通_6.csv']
-    
-    #list is road_walkspeed_rout
+    #make dataframe from csv
     df_list_asphalt = []
     df_list_sand = []
-    append_dataframe(df_list_asphalt, csv_list_asphalt, csv_dir)
-    append_dataframe(df_list_sand, csv_list_sand, csv_dir)
+    append_dataframe(df_list_asphalt, csv_list_asphalt)
+    append_dataframe(df_list_sand, csv_list_sand)
     
+    #set index colonum in dataframes
     for num in range(len(csv_list_asphalt)):
         df_list_asphalt[num]['index'] = 0
     for num in range(len(csv_list_sand)):
@@ -77,16 +70,20 @@ if __name__ == '__main__':
     
     
     """データの前処理"""
-    df_train =  pd.concat([df_list_asphalt[0],
-                           df_list_asphalt[1],
-                           df_list_asphalt[2],
-                           df_list_asphalt[3],
-                           df_list_sand[1],
-                           df_list_sand[2],
-                           df_list_sand[3],
-                           df_list_sand[4]])
+    df_list_train = []
+    df_list_test  = []
     
-    df_test = pd.concat([df_list_asphalt[4], df_list_sand[5]])
+    for num in range(len(df_list_asphalt)):
+        if num % 5 == 0:
+            df_list_test.append(df_list_asphalt[num])
+            df_list_test.append(df_list_sand[num])
+        else:
+            df_list_train.append(df_list_asphalt[num])
+            df_list_train.append(df_list_sand[num])
+    
+    df_train =  pd.concat(df_list_train)
+    
+    df_test = pd.concat(df_list_test)
     
     x_train = df_train.drop('index', axis = 1)
     y_train = df_train['index']
