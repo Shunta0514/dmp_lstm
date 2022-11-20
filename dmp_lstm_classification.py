@@ -49,18 +49,18 @@ def plot_history_accuracy(fit):
 if __name__ == '__main__':
     
     csv_dir = './lstm_imu_raw_data/'
-    csv_list_asphalt = ['asphalt_normal_straight/アスファルト_普通_1.csv',
-                        'asphalt_normal_straight/アスファルト_普通_2.csv',
-                        'asphalt_normal_straight/アスファルト_普通_3.csv',
-                        'asphalt_normal_straight/アスファルト_普通_4.csv',
-                        'asphalt_normal_straight/アスファルト_普通_5.csv']
+    csv_list_asphalt = ['asphalt_flat_straight_normal/アスファルト_普通_1.csv',
+                        'asphalt_flat_straight_normal/アスファルト_普通_2.csv',
+                        'asphalt_flat_straight_normal/アスファルト_普通_3.csv',
+                        'asphalt_flat_straight_normal/アスファルト_普通_4.csv',
+                        'asphalt_flat_straight_normal/アスファルト_普通_5.csv']
     
-    csv_list_sand = ['sand_normal_straight/砂利_普通_1.csv', #x軸方向の線形加速度が不適当なデータ
-                     'sand_normal_straight/砂利_普通_2.csv',
-                     'sand_normal_straight/砂利_普通_3.csv',
-                     'sand_normal_straight/砂利_普通_4.csv',
-                     'sand_normal_straight/砂利_普通_5.csv',
-                     'sand_normal_straight/砂利_普通_6.csv']
+    csv_list_sand = ['sand_flat_straight_normal/砂利_普通_1.csv', #x軸方向の線形加速度が不適当なデータ
+                     'sand_flat_straight_normal/砂利_普通_2.csv',
+                     'sand_flat_straight_normal/砂利_普通_3.csv',
+                     'sand_flat_straight_normal/砂利_普通_4.csv',
+                     'sand_flat_straight_normal/砂利_普通_5.csv',
+                     'sand_flat_straight_normal/砂利_普通_6.csv']
     
     #list is road_walkspeed_rout
     df_list_asphalt = []
@@ -106,9 +106,9 @@ if __name__ == '__main__':
        
     
     """モデル定義"""
-    BATCHSIZE = 8
+    BATCHSIZE = 16
     EPOCHS = 300
-    UNITNUM = 20
+    UNITNUM = 10
     optimizer = RMSprop()
     model = Sequential()
     model.add(LSTM(UNITNUM, input_shape = (x_train.shape[1], x_train.shape[2]), return_sequences = True))
