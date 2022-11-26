@@ -1,16 +1,26 @@
 import glob
 import re
 import os
+import csv
 from operator import itemgetter
+import pandas as pd
 
-file_train = []
-file_test = []
-file = glob.glob('lstm_imu_raw_data/[a][s][p][h]*/*.csv')
-for i in range(len(file)):
-    if i % 5 == 0:
-        file_test.append(file[i])
-    else:
-        file_train.append(file[i])
-        
-print(file_train)
-print(file_test)
+csvFileName = 'IMUlocation.csv'
+file = glob.glob('lstm_imu_raw_data/*/*/*.csv')
+newlist = []
+newfile = []
+for num in range(len(file)):
+    newlist.append('.\\'+file[num])
+    newfile.append(newlist)
+    newlist = []
+with open(csvFileName, 'w',newline="") as wf:
+    fwriter = csv.writer(wf, lineterminator='\n')
+    for num in range(len(newfile)):
+        fwriter.writerow(newfile[num])
+    
+df = pd.read_csv('IMUdata_information.csv')
+alive_df = df[df['is_damaged'] == False]
+print(alive_df)
+dfsub = alive_df.iloc[3]
+print(dfsub)
+print(dfsub['useful[s]'])
